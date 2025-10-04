@@ -36,46 +36,17 @@ jobs:
 
       - name: Create or update PR into main
         if: success()
-        uses: actions/github-script@v7
+        uses: repo-sync/pull-request@v2
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const { owner, repo } = context.repo;
-            const head = `${owner}:dev`;
-            const base = 'main';
-
-            const { data: existing } = await github.rest.pulls.list({
-              owner,
-              repo,
-              head,
-              base,
-              state: 'open',
-              per_page: 1,
-            });
-
-            if (existing.length > 0) {
-              core.info(`PR already exists: #${existing[0].number}`);
-              return;
-            }
-
-            const headCommit = context.payload.head_commit || {};
-            const commitMessage = headCommit.message || context.sha;
-            const title = `Sync dev to main - ${new Date().toISOString()}`;
-            const body = [
-              '## Summary',
-              `- Automated PR to merge latest dev changes into main`,
-              `- Commit: ${context.sha}`,
-              `- Message: ${commitMessage}`,
-              '',
-              '## Automated Notice',
-              'Tests succeeded in CI prior to opening this pull request.'
-            ].join('\n');
-
-            await github.rest.pulls.create({
-              owner,
-              repo,
-              head: 'dev',
-              base,
-              title,
-              body,
-            });
+          source_branch: dev
+          destination_branch: main
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_title: Sync dev to main - ${{ github.sha }}
+          pr_body: |
+            ## Summary
+            - Automated PR to merge latest dev changes into main
+            - Commit: ${{ github.sha }}
+            - Message: ${{ github.event.head_commit.message }}
+            
+            ## Automated Notice
+            Tests succeeded in CI prior to opening this pull request.
