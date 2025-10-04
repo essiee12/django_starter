@@ -34,17 +34,17 @@ jobs:
       - name: Run Django tests
         run: docker compose -f local.yml run --rm django uv run manage.py test
 
-      - name: Create or update PR into main
+      - name: Create or update PR into master
         if: success()
         uses: repo-sync/pull-request@v2
         with:
           source_branch: dev
-          destination_branch: main
+          destination_branch: master
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          pr_title: Sync dev to main - ${{ github.sha }}
+          pr_title: Sync dev to master - ${{ github.sha }}
           pr_body: |
             ## Summary
-            - Automated PR to merge latest dev changes into main
+            - Automated PR to merge latest dev changes into master
             - Commit: ${{ github.sha }}
             - Message: ${{ github.event.head_commit.message }}
             
