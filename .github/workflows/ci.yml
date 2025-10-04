@@ -15,6 +15,7 @@ jobs:
       BACKEND_SLUG: dev
       DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1
       DATABASE_URL: sqlite:///test_db.sqlite3
+      DJANGO_SETTINGS_MODULE: core.settings.localtest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -31,7 +32,7 @@ jobs:
         run: uv sync --frozen --no-install-project
 
       - name: Run Django tests
-        run: uv run python backend/manage.py test
+        run: docker compose -f local.yml run --rm django uv run manage.py test
 
       - name: Create or update PR into main
         if: success()
