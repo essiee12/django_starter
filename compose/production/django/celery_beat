@@ -1,0 +1,6 @@
+#!/bin/sh
+
+set -o errexit
+set -o nounset
+
+uv run celery -A $DJANGO_APP_NAME beat -l info -s /common/celerybeat-schedule

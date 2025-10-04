@@ -1,0 +1,6 @@
+#!/bin/sh
+
+set -o errexit
+set -o nounset
+
+uv run watchmedo auto-restart -d . -R -p '*.py' -- celery -A $DJANGO_APP_NAME worker -B -l error -s /common/celerybeat-schedule

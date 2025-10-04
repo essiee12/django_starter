@@ -1,0 +1,20 @@
+{% extends "base_mail.html" %}
+
+{% block title %}{{subject}}{% endblock title %}
+
+{% block main_content %}
+<div style="padding: 40px 0; margin: 0 auto; width: 650px">
+    <div class="main_content">
+        <p>
+            Your OTP is {{message}},<br /><br />
+            Enter this OTP code in the application to complete the verification
+            process.
+        </p>
+        <p>
+            Best regards, <br />
+            Shankar Lamichhane<br />
+            Template Owner<br />
+        </p>
+    </div>
+</div>
+{% endblock main_content %}

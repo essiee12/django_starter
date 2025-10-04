@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -o errexit
+set -o nounset
+
+uv run python manage.py collectstatic --noinput
+uv run gunicorn $DJANGO_APP_NAME.wsgi --workers ${DJANGO_WORKERS:-2} --bind 0.0.0.0:8080 --chdir=/app

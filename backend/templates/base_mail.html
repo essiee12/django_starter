@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{% block title %}{% endblock title %}</title>
+        {% block style %}
+        <style>
+            p {
+                font-size: 16px !important;
+                color: #151b28 !important;
+                line-height: 22px;
+            }
+
+            .main_content {
+                background-color: white;
+                border-radius: 12px;
+                border: 1px solid rgba(28, 0, 55, 0.11);
+                padding: 32px;
+                margin-top: 20px;
+            }
+        </style>
+        {% endblock style %}
+    </head>
+    <body style="background-color: #faf9fb">
+        {% block main_content %}{% endblock main_content %}
+    </body>
+</html>

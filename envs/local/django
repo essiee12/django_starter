@@ -1,0 +1,15 @@
+export DJANGO_DEBUG=True
+export DJANGO_ALLOWED_HOSTS=*
+
+export DJANGO_APP_NAME=core
+
+export BACKEND_DOMAIN=example.com
+export BACKEND_URL=http://example.com
+export BACKEND_SLUG=example
+
+export DJANGO_SECRET_KEY="62mV96tto6GgR6nxsua8dMpa0T/8DLZi883MNEvK97I66h2h0NW12IDivLaTPFIq"
+
+# Email Configuration
+EMAIL_HOST="smtp.gmail.com"
+EMAIL_HOST_USER="testmail@gmail.com"
+EMAIL_HOST_PASSWORD="TestAccount@123"

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+black .
+find . -name "*.py"  | xargs autoflake --imports=django,requests,urllib3  --in-place --remove-unused-variables

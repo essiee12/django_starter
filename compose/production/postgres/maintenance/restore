@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+
+
+### Restore database from a backup.
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+
+working_dir="$(dirname ${0})"
+source "${working_dir}/_sourced/constants.sh"
+source "${working_dir}/_sourced/messages.sh"
+
+
+if [[ -z ${1+x} ]]; then
+    message_error "Backup  folder or filename is not specified yet it is a required parameter. Make sure you provide one and try again."
+    exit 1
+fi
+
+
+backup_path="${BACKUP_DIR_PATH}/${1}"
+
+# Check if the specified backup is a file or directory
+if [[ -d "${backup_path}" ]]; then
+    backup_type="directory"
+elif [[ -f "${backup_path}" ]]; then
+    backup_type="file"
+else
+    message_error "No backup with the specified name found. Check out the 'backups' command with fab to list all available backup files and folders."
+    exit 1
+fi
+
+message_welcome "Restoring the '${POSTGRES_DB}' database from the '${backup_path}' backup..."
+
+
+if [[ "${POSTGRES_USER}" == "postgres" ]]; then
+    message_error "Restoring as 'postgres' user is not supported. Assign 'POSTGRES_USER' env with another one and try again."
+    exit 1
+fi
+
+
+
+export PGHOST="${POSTGRES_HOST}"
+export PGPORT="${POSTGRES_PORT}"
+export PGUSER="${POSTGRES_USER}"
+export PGPASSWORD="${POSTGRES_PASSWORD}"
+export PGDATABASE="${POSTGRES_DB}"
+
+# Terminate all active connections to the database
+message_info "Terminating active connections to the database..."
+if ! psql -U "${PGUSER}" -h "${PGHOST}" -p "${PGPORT}" -d postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '${PGDATABASE}' AND pid <> pg_backend_pid();"; then
+    message_error "Failed to terminate connections to the '${PGDATABASE}' database."
+    exit 1
+fi
+
+message_info "Dropping the database..."
+dropdb "${PGDATABASE}"
+
+message_info "Creating a new database..."
+createdb --owner="${PGUSER}" "${PGDATABASE}"
+
+# Restore based on the backup type
+if [[ "${backup_type}" == "directory" ]]; then
+    # Restore from directory format (-Fd)
+    message_info "Restoring from directory format backup..."
+    if ! pg_restore -d "${PGDATABASE}" -j 4 "${backup_path}"; then
+        message_error "Failed to restore from directory format."
+        exit 1
+    fi
+else
+    # Restore from compressed SQL file (.sql.gz)
+    message_info "Restoring from compressed SQL file..."
+    if ! gunzip -c "${backup_path}" | psql "${PGDATABASE}"; then
+        message_error "Failed to restore from compressed SQL file."
+        exit 1
+    fi
+fi
+
+message_success "The '${POSTGRES_DB}' database has been successfully restored from '${backup_path}'."

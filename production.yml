@@ -1,0 +1,98 @@
+volumes:
+  django_template_production_postgres_data: {}
+  django_template_production_staticfiles: {}
+
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgres/Dockerfile
+    container_name: django_template_postgres_prod
+    volumes:
+      - django_template_production_postgres_data:/var/lib/postgresql/data
+      - ./data/backups:/backups
+    env_file:
+      - ./.envs/.production/.config
+      - ./.envs/.production/.keys
+    restart: always
+
+  redis:
+    restart: always
+    image: redis:latest
+    container_name: django_template_redis_prod
+
+  django:
+    build:
+      context: .
+      dockerfile: ./compose/production/django/Dockerfile
+    container_name: django_template_django_prod
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./backend/:/app
+      - ./data/logs/:/logs
+      - ./data/common/:/common
+      - ./data/media/:/media
+      - ./data/django_template_production_staticfiles:/staticfiles
+    env_file:
+      - ./.envs/.production/.config
+      - ./.envs/.production/.keys
+    command: /start
+    restart: always
+
+  celery:
+    profiles: ["celery"]
+    build:
+      context: .
+      dockerfile: ./compose/production/django/Dockerfile
+    container_name: django_template_celery_prod
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./data/logs/:/logs
+      - ./data/common/:/common
+      - ./data/media/:/media
+      - ./data/django_template_production_staticfiles:/staticfiles
+    env_file:
+      - ./.envs/.production/.config
+      - ./.envs/.production/.keys
+    command: /celery_start
+    restart: always
+
+  celery-beat:
+    build:
+      context: .
+      dockerfile: ./compose/production/django/Dockerfile
+    container_name: django_template_celery_beat_prod
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./data/logs/:/logs
+      - ./data/common/:/common
+      - ./data/media/:/media
+      - ./data/django_template_production_staticfiles:/staticfiles
+    env_file:
+      - ./.envs/.production/.config
+      - ./.envs/.production/.keys
+    command: /celery_beat
+    restart: always
+
+  nginx:
+    build:
+      context: ./compose/production/nginx/
+      dockerfile: Dockerfile
+    container_name: django_template_nginx_prod
+    depends_on:
+        - django
+    volumes:
+      - ./data/django_template_production_staticfiles:/staticfiles
+      - ./data/media/:/media
+    env_file:
+      - ./.envs/.production/.config
+      - ./.envs/.production/.keys
+    ports:
+      - "$APP_PORT:80"
+    restart: always

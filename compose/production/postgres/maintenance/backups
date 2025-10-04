@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+
+### View backups.
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+
+working_dir="$(dirname ${0})"
+source "${working_dir}/_sourced/constants.sh"
+source "${working_dir}/_sourced/messages.sh"
+
+
+message_welcome "These are the backups you have got:"
+
+# List all directories (backups) inside the backup path
+backups=$(ls -d "${BACKUP_DIR_PATH}"/* 2> /dev/null)
+
+if [[ -z "${backups}" ]]; then
+    message_info "No backups available in '${BACKUP_DIR_PATH}'."
+else
+    for backup in ${backups}; do
+        echo "- $(basename "${backup}")"
+    done
+fi
